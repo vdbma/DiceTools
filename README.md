@@ -48,9 +48,9 @@ Roll : 1d5  - 1d7  + 6
 Average : 5.0
 ```
 ```
-$ python DiceTools/main.py -p 1d20 + 7   
+$ python DiceTools/main.py -p 1d20 + 7
 Roll : 1d20  +  7
-Average : 10.5
+Average : 17.5
 ```
 ## Contributing
 
