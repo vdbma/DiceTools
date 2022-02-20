@@ -28,10 +28,14 @@ def test_isDie():
     assert not isDie("568")
 
 def test_computeDice():
-    assert computeDice("1d6") == 3.5
-    assert computeDice("2d20") == 21
-    assert computeDice("-3d8") == -13.5
-    assert computeDice("1d6+3") == 6.5
-    assert computeDice("1d6-5") == -1.5
-
-    assert computeDice("1d6+3+ 7d8   +14 -5+12d18- 3") == 158 # with odd spacing
+    # assert computeDice("1d6") == 3.5
+    # assert computeDice("2d20") == 21
+    # assert computeDice("-3d8") == -13.5
+    # assert computeDice("1d6+3") == 6.5
+    # assert computeDice("1d6-5") == -1.5
+    # assert computeDice("1d20 + 7") == 17.5
+    #
+    # assert computeDice("1d6+3+ 7d8   +14 -5+12d18- 3") == 158 # with odd spacing
+    #
+    # assert computeDice(["1d20","+","7"]) == 17.5
+    assert computeDice(["1d20 + 7"]) == 17.5

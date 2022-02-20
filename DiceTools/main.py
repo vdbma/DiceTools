@@ -50,8 +50,12 @@ def computeStats(raw_rating, raw_bonus, *, display=True):
 def parseRoll(raw_roll):
     """ parses dice rolls"""
     roll = ""
-    for r in raw_roll:
-        roll += r.strip(" ")
+    for item in raw_roll:
+        if "+" in item or "-" in item:
+            for r in re.split('([+-])',item):
+                roll+=r.strip(" ")
+        else:
+            roll += item.strip(" ")
 
     summands = re.split('([+-])',roll) # [] for a list of possible separators, () to keep them
     return summands
@@ -59,6 +63,7 @@ def parseRoll(raw_roll):
 def computeDice(raw_roll):
     sum = 0
     summands = parseRoll(raw_roll)
+    print(f"{summands = }")
     sign = 1
     for elt in summands:
         if isDie(elt):
@@ -96,7 +101,7 @@ def main():
         computeStats(*args.DD)
 
     elif args.dice:
-        computeDice(args.dice)
+        print(computeDice(args.dice))
 
 if __name__ == "__main__":
     # execute only if run as a script
