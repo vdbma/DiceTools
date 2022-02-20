@@ -28,4 +28,4 @@ $ python DiceTools/main.py -d [challenge rating] [bonus]
 
 ## Contributing
 
-Please make use of `pre-commit` and `pytest`.
+Please make use of `pre-commit` and `pytest` (will be used by the CI).
