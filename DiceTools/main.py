@@ -27,17 +27,22 @@ def _printDebug(args):
     print("***********************************************************************")
 
 
-def computeStats(raw_rating, raw_bonus):
+def computeStats(raw_rating, raw_bonus, *, display=True):
     """ succedes on equality"""
     rating, bonus = int(raw_rating), int(raw_bonus)
-    chance = 5*bonus - (rating-10)*5 + 50
+
+    chance = 5*bonus - (rating-10)*5 + 55
+
     renormalized_chance = min(95, max(5, chance))
-    if renormalized_chance == 5:
-        print("\033[91m"  f"{renormalized_chance} % (crit only)"+"\033[0m" +f" chances to succed against a rating of {rating} with a {bonus} bonus.")
-    elif renormalized_chance < 50:
-        print("\033[93m"  f"{renormalized_chance} %"+"\033[0m" +f" chances to succed against a rating of {rating} with a {bonus} bonus.")
-    else:
-        print("\033[92m"  f"{renormalized_chance} %"+"\033[0m" +f" chances to succed against a rating of {rating} with a {bonus} bonus.")
+
+    if display:
+        if renormalized_chance == 5:
+            print("\033[91m"  f"{renormalized_chance} % (crit only)"+"\033[0m" +f" chances to succed against a rating of {rating} with a {bonus} bonus.")
+        elif renormalized_chance < 50:
+            print("\033[93m"  f"{renormalized_chance} %"+"\033[0m" +f" chances to succed against a rating of {rating} with a {bonus} bonus.")
+        else:
+            print("\033[92m"  f"{renormalized_chance} %"+"\033[0m" +f" chances to succed against a rating of {rating} with a {bonus} bonus.")
+    return renormalized_chance
 
 def main():
     args = _parse()
