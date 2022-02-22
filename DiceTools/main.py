@@ -66,7 +66,7 @@ def computeDice(raw_roll):
     """computed the average of the roll"""
     sum = 0
     summands = parseRoll(raw_roll)
-    print(f"{summands = }")
+    # print(f"{summands = }")
     sign = 1
     for elt in summands:
         if isDie(elt):
@@ -107,7 +107,7 @@ def main():
         computeStats(*args.DD)
 
     elif args.dice:
-        print(computeDice(args.dice))
+        computeDice(args.dice)
 
 
 if __name__ == "__main__":
