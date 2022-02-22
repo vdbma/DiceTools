@@ -23,32 +23,32 @@ while in the repository directory (`-e` option will auto-update the package for 
 ### Compute the chance to succed a challenge
 
 ```
-$ python DiceTools/main.py -d [challenge rating] [bonus]
+$ dicetools -d [challenge rating] [bonus]
 ```
 
 **Examples**
 ```
-$ python DiceTools/main.py -d 18 5
+$ dicetools -d 18 5
 40 % chances to succed against a rating of 18 with a 5 bonus.
 ```
 ```
-$ python DiceTools/main.py -d 10 3
+$ dicetools -d 10 3
 70 % chances to succed against a rating of 10 with a 3 bonus.
 ```
 ### Compute the average of a complex roll
 ```
-$ python DiceTools/main.py -p [roll]
+$ dicetools -p [roll]
 ```
 *Note* you need to use quotes if there is a `-` in your roll.
 
 **Examples**
 ```
-$ python DiceTools/main.py -p "1d5 -1d7 +6"
+$ dicetools -p "1d5 -1d7 +6"
 Roll : 1d5  - 1d7  + 6
 Average : 5.0
 ```
 ```
-$ python DiceTools/main.py -p 1d20 + 7
+$ dicetools -p 1d20 + 7
 Roll : 1d20  +  7
 Average : 17.5
 ```
