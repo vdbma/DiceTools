@@ -52,6 +52,24 @@ $ dicetools -p 1d20 + 7
 Roll : 1d20  +  7
 Average : 17.5
 ```
+
+### Roll a complex roll
+```
+$ dicetools -r [roll]
+```
+*Note* you need to use quotes if there is a `-` in your roll.
+
+**Examples**
+```
+$ dicetools -r "1d5 -1d7 +6"
+Roll : 1d5  - 1d7  + 6
+Result : 7 (4, 3)
+```
+```
+$ dicetools -r 1d20 + 7
+Roll : 1d20  +  7
+Result : 9 (2,)
+```
 ## Contributing
 
 Please make use of `pre-commit` and `pytest` (will be used by the CI).
