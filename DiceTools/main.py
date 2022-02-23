@@ -1,6 +1,8 @@
 import argparse
 import sys
 import re
+import numpy as np
+import numpy.random as nr
 
 
 def _parse():
@@ -8,6 +10,8 @@ def _parse():
 
     parser.add_argument("-d", "--DD", type=str, nargs="+", help="DD challenge [rating] [bonus]")
     parser.add_argument("-p", "--dice", type=str, nargs="+", help="Dice parser [kdn] <+ j>")
+    parser.add_argument("-r", "--roll", type=str, nargs="+", help="Dice roller [kdn] <+ j>")
+
     parser.add_argument("--debug", action="store_true", help="prints debug info")
 
     args = parser.parse_args()
@@ -64,21 +68,21 @@ def parseRoll(raw_roll):
 
 def computeDice(raw_roll):
     """computed the average of the roll"""
-    sum = 0
+    tot = 0
     summands = parseRoll(raw_roll)
     # print(f"{summands = }")
     sign = 1
     for elt in summands:
         if isDie(elt):
-            sum += avgDice(elt) * sign
+            tot += avgDice(elt) * sign
             sign = 1
         elif isNumber(elt):
-            sum += int(elt) * sign
+            tot += int(elt) * sign
             sign = 1
         if elt == "-":
             sign = -1
-    print(f"Roll : {' '.join(summands)}\n" f"Average : {sum}")
-    return sum
+    print(f"Roll : {' '.join(summands)}\n" f"Average : {tot}")
+    return tot
 
 
 def isDie(s):
@@ -98,6 +102,34 @@ def avgDice(dice):
     return int(n_dice) * (int(n_faces) + 1) / 2
 
 
+def rollDie(dice):
+    n_dice, n_faces = dice.split("d")
+    return [nr.randint(int(n_faces)) + 1 for _ in range(int(n_dice))]
+
+
+def computeRoll(raw_roll):
+    summands = parseRoll(raw_roll)
+
+    tot = 0
+    results = []
+    sign = 1
+    for elt in summands:
+        if isDie(elt):
+            roll = rollDie(elt)
+            results += roll
+            tot += np.sum(roll) * sign
+            sign = 1
+        elif isNumber(elt):
+            tot += int(elt) * sign
+            sign = 1
+        if elt == "-":
+            sign = -1
+
+    print(f"Roll : {' '.join(summands)}\n" f"Result : {tot} {tuple(results)}")
+
+    return tot
+
+
 def main():
     args = _parse()
     if args.debug:
@@ -108,6 +140,9 @@ def main():
 
     elif args.dice:
         computeDice(args.dice)
+
+    if args.roll:
+        computeRoll(args.roll)
 
 
 if __name__ == "__main__":
