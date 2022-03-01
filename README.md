@@ -80,6 +80,8 @@ This computes the expectation value for a propability law :
 <img src="https://render.githubusercontent.com/render/math?math=P(X=n) = p(1-p)^{n-1}">
 for which the expectation value is
 <img src="https://render.githubusercontent.com/render/math?math=E(X) = \frac{1}{p}">
+
+
 **Examples**
 ```
 $ dicetools -w -5
