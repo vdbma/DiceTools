@@ -1,4 +1,5 @@
-from DiceTools.main import computeStats, avgDice, isDie, computeDice, rollDie
+from DiceTools.main import computeStats, avgDice, isDie, computeDice, rollDie, computeExpectationWait
+import numpy as np
 
 
 def test_computeStats():
@@ -48,3 +49,10 @@ def test_rollDie():
     assert rollDie("1d1") == [1]
     assert rollDie("53d1") == [1] * 53
     assert len(rollDie("67d20")) == 67
+
+
+def test_computeExpectationWait():
+    assert np.isclose(computeExpectationWait(-5), 7 / 3)
+    assert np.isclose(computeExpectationWait(-1), 1.0)
+    assert np.isclose(computeExpectationWait(5), 0.25)
+    assert np.isclose(computeExpectationWait(7), 1 / 9)
