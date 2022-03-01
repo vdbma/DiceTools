@@ -134,7 +134,7 @@ def computeRoll(raw_roll):
 def computeExpectationWait(bonus):
     """
     P(X = n) = p(1-p)^n
-    Hence the expectation value is (1-p)/p
+    Hence the expectation value is 1/p
     """
 
     p = bonus * 0.05 + 0.55
@@ -143,11 +143,12 @@ def computeExpectationWait(bonus):
     if bonus >= 0:
         disp_bonus = "+" + disp_bonus
 
-    if (1 - p) / p < 1:
-        print(f"For a save roll with bonus {disp_bonus}, the expected number of roll is \033[92m{(1-p)/p:.2f}\033[0m")
+    exp = 1 / p
+    if exp < 1:
+        print(f"For a save roll with bonus {disp_bonus}, the expected number of roll is \033[92m{exp:.2f}\033[0m")
     else:
-        print(f"For a save roll with bonus {disp_bonus}, the expected number of roll is \033[93m{(1-p)/p:.2f}\033[0m")
-    return (1 - p) / p
+        print(f"For a save roll with bonus {disp_bonus}, the expected number of roll is \033[93m{exp:.2f}\033[0m")
+    return exp
 
 
 def main():
