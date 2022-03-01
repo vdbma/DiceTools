@@ -10,7 +10,8 @@ def _parse():
 
     parser.add_argument("-d", "--DD", type=str, nargs="+", help="DD challenge [rating] [bonus]")
     parser.add_argument("-p", "--dice", type=str, nargs="+", help="Dice parser [kdn] <+ j>")
-    parser.add_argument("-r", "--roll", type=str, nargs="+", help="Dice roller [kdn] <+ j>")
+    parser.add_argument("-r", "--roll", type=str, nargs="+", help="Dice roller [k   dn] <+ j>")
+    parser.add_argument("-w", "--wait", type=int, help="Expectation value #rolls for save roll with WAIT bonus/malus.")
 
     parser.add_argument("--debug", action="store_true", help="prints debug info")
 
@@ -130,6 +131,25 @@ def computeRoll(raw_roll):
     return tot
 
 
+def computeExpectationWait(bonus):
+    """
+    P(X = n) = p(1-p)^n
+    Hence the expectation value is (1-p)/p
+    """
+
+    p = bonus * 0.05 + 0.55
+
+    disp_bonus = str(bonus)
+    if bonus >= 0:
+        disp_bonus = "+" + disp_bonus
+
+    if (1 - p) / p < 1:
+        print(f"For a save roll with bonus {disp_bonus}, the expected number of roll is \033[92m{(1-p)/p:.2f}\033[0m")
+    else:
+        print(f"For a save roll with bonus {disp_bonus}, the expected number of roll is \033[93m{(1-p)/p:.2f}\033[0m")
+    return (1 - p) / p
+
+
 def main():
     args = _parse()
     if args.debug:
@@ -143,6 +163,9 @@ def main():
 
     if args.roll:
         computeRoll(args.roll)
+
+    if args.wait:
+        computeExpectationWait(args.wait)
 
 
 if __name__ == "__main__":
