@@ -4,6 +4,20 @@
 
 Set of tools for D&D dice actions !
 
+## Contents
+
+<!-- toc -->
+
+- [Installation](#installation)
+- [Usage](#usage)
+  * [Compute the chance to succed a challenge](#compute-the-chance-to-succed-a-challenge)
+  * [Compute the average of a complex roll](#compute-the-average-of-a-complex-roll)
+  * [Roll a complex roll](#roll-a-complex-roll)
+  * [Compute the expected number of rolls for a save roll with bonus](#compute-the-expected-number-of-rolls-for-a-save-roll-with-bonus)
+- [Contributing](#contributing)
+
+<!-- tocstop -->
+
 ## Installation
 
 Clone this repo with
