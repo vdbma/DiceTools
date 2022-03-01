@@ -70,6 +70,24 @@ $ dicetools -r 1d20 + 7
 Roll : 1d20  +  7
 Result : 9 (2,)
 ```
+
+### Compute the expected number of rolls for a save roll with bonus
+
+```
+$ dicetools -w [bonus/malus]
+```
+
+**Examples**
+```
+$ dicetools -w -5
+For a save roll with bonus -5, the expected number of roll is 2.33
+```
+```
+$ dicetools -w 3
+For a save roll with bonus +3, the expected number of roll is 0.43
+
+```
+
 ## Contributing
 
 Please make use of `pre-commit` and `pytest` (will be used by the CI).
