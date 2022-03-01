@@ -147,11 +147,18 @@ def computeExpectationWait(bonus):
     if bonus >= 0:
         disp_bonus = "+" + disp_bonus
 
-    exp = 1 / p
-    if exp < 1:
-        print(f"For a save roll with bonus {disp_bonus}, the expected number of rolls is \033[92m{exp:.2f}\033[0m")
+    if p > 0:
+        exp = 1 / p
     else:
-        print(f"For a save roll with bonus {disp_bonus}, the expected number of rolls is \033[93m{exp:.2f}\033[0m")
+        exp = np.inf
+
+    if exp < 1:
+        print(f"For a save roll with bonus {disp_bonus}, the expected number of rolls is \033[92m{exp:.2f}\033[0m.")
+    elif exp == np.inf:
+        print(f"For a save roll with bonus {disp_bonus}, the expected number of rolls is \033[91m" "infinite" "\033[0m.")
+    else:
+        print(f"For a save roll with bonus {disp_bonus}, the expected number of rolls is \033[93m{exp:.2f}\033[0m.")
+
     return exp
 
 
@@ -169,7 +176,7 @@ def main():
     if args.roll:
         computeRoll(args.roll)
 
-    if args.wait:
+    if args.wait is not None:
         computeExpectationWait(args.wait)
 
 
