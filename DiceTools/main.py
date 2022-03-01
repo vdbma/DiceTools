@@ -149,9 +149,9 @@ def computeExpectationWait(bonus):
 
     exp = 1 / p
     if exp < 1:
-        print(f"For a save roll with bonus {disp_bonus}, the expected number of roll is \033[92m{exp:.2f}\033[0m")
+        print(f"For a save roll with bonus {disp_bonus}, the expected number of rolls is \033[92m{exp:.2f}\033[0m")
     else:
-        print(f"For a save roll with bonus {disp_bonus}, the expected number of roll is \033[93m{exp:.2f}\033[0m")
+        print(f"For a save roll with bonus {disp_bonus}, the expected number of rolls is \033[93m{exp:.2f}\033[0m")
     return exp
 
 

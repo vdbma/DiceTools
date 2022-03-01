@@ -99,11 +99,11 @@ for which the expectation value is
 **Examples**
 ```
 $ dicetools -w -5
-For a save roll with bonus -5, the expected number of roll is 3.33
+For a save roll with bonus -5, the expected number of rolls is 3.33
 ```
 ```
 $ dicetools -w 3
-For a save roll with bonus +3, the expected number of roll is 1.43
+For a save roll with bonus +3, the expected number of rolls is 1.43
 ```
 
 ## Contributing
