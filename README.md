@@ -43,11 +43,11 @@ $ dicetools -d [challenge rating] [bonus]
 **Examples**
 ```
 $ dicetools -d 18 5
-40 % chances to succed against a rating of 18 with a 5 bonus.
+40 % chances to succed against a rating of 18 with a +5 bonus.
 ```
 ```
 $ dicetools -d 10 3
-70 % chances to succed against a rating of 10 with a 3 bonus.
+70 % chances to succed against a rating of 10 with a +3 bonus.
 ```
 ### Compute the average of a complex roll
 ```

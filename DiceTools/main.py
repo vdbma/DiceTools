@@ -42,13 +42,17 @@ def computeStats(raw_rating, raw_bonus, *, display=True):
 
     renormalized_chance = min(95, max(5, chance))
 
+    disp_bonus = str(bonus)
+    if bonus >= 0:
+        disp_bonus = "+" + disp_bonus
+
     if display:
         if renormalized_chance == 5:
-            print("\033[91m" f"{renormalized_chance} % (crit only)" + "\033[0m" + f" chances to succed against a rating of {rating} with a {bonus} bonus.")
+            print("\033[91m" f"{renormalized_chance} % (crit only)" + "\033[0m" + f" chances to succed against a rating of {rating} with a {disp_bonus} bonus.")
         elif renormalized_chance < 50:
-            print("\033[93m" f"{renormalized_chance} %" + "\033[0m" + f" chances to succed against a rating of {rating} with a {bonus} bonus.")
+            print("\033[93m" f"{renormalized_chance} %" + "\033[0m" + f" chances to succed against a rating of {rating} with a {disp_bonus} bonus.")
         else:
-            print("\033[92m" f"{renormalized_chance} %" + "\033[0m" + f" chances to succed against a rating of {rating} with a {bonus} bonus.")
+            print("\033[92m" f"{renormalized_chance} %" + "\033[0m" + f" chances to succed against a rating of {rating} with a {disp_bonus} bonus.")
 
     return renormalized_chance
 
