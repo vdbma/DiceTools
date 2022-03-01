@@ -76,7 +76,10 @@ Result : 9 (2,)
 ```
 $ dicetools -w [bonus/malus]
 ```
-
+This computes the expectation value for a propability law :
+<img src="https://render.githubusercontent.com/render/math?math=P(X=n) = p(1-p)^{n-1}">
+for which the expectation value is
+<img src="https://render.githubusercontent.com/render/math?math=E(X) = \frac{1}{p}">
 **Examples**
 ```
 $ dicetools -w -5
@@ -85,7 +88,6 @@ For a save roll with bonus -5, the expected number of roll is 2.33
 ```
 $ dicetools -w 3
 For a save roll with bonus +3, the expected number of roll is 0.43
-
 ```
 
 ## Contributing
