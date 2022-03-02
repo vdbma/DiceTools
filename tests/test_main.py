@@ -52,7 +52,8 @@ def test_rollDie():
 
 
 def test_computeExpectationWait():
+    assert np.isclose(computeExpectationWait(-20), 20.0)
     assert np.isclose(computeExpectationWait(-5), 10 / 3)
     assert np.isclose(computeExpectationWait(-1), 2)
     assert np.isclose(computeExpectationWait(5), 1.25)
-    assert np.isclose(computeExpectationWait(21), 0.625)
+    assert np.isclose(computeExpectationWait(21), 20 / 19)

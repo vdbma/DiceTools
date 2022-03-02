@@ -141,21 +141,18 @@ def computeExpectationWait(bonus):
     Hence the expectation value is 1/p
     """
 
-    p = bonus * 0.05 + 0.55
+    p = max(min(bonus * 0.05 + 0.55, 0.95), 0.05)
 
     disp_bonus = str(bonus)
     if bonus >= 0:
         disp_bonus = "+" + disp_bonus
 
-    if p > 0:
-        exp = 1 / p
-    else:
-        exp = np.inf
+    exp = 1 / p
 
-    if exp < 1:
+    if p == 0.95:  # always succeds on 20
         print(f"For a save roll with bonus {disp_bonus}, the expected number of rolls is \033[92m{exp:.2f}\033[0m.")
-    elif exp == np.inf:
-        print(f"For a save roll with bonus {disp_bonus}, the expected number of rolls is \033[91m" "infinite" "\033[0m.")
+    elif p == 0.05:  # always fails on 1
+        print(f"For a save roll with bonus {disp_bonus}, the expected number of rolls is \033[91m" f"{exp:.2f}" "\033[0m.")
     else:
         print(f"For a save roll with bonus {disp_bonus}, the expected number of rolls is \033[93m{exp:.2f}\033[0m.")
 
