@@ -13,7 +13,7 @@ Set of tools for D&D dice actions !
   * [Compute the chance to succed a challenge](#compute-the-chance-to-succed-a-challenge)
   * [Compute the average of a complex roll](#compute-the-average-of-a-complex-roll)
   * [Roll a complex roll](#roll-a-complex-roll)
-  * [Compute the expected number of rolls for a save roll with bonus](#compute-the-expected-number-of-rolls-for-a-save-roll-with-bonus)
+  * [Compute the expected number of rolls for a saving throw with bonus](#compute-the-expected-number-of-rolls-for-a-saving-throw-with-bonus)
 - [Contributing](#contributing)
 
 <!-- tocstop -->
@@ -85,7 +85,7 @@ Roll : 1d20  +  7
 Result : 9 (2,)
 ```
 
-### Compute the expected number of rolls for a save roll with bonus
+### Compute the expected number of rolls for a saving throw with bonus
 
 ```
 $ dicetools -w [bonus/malus]
@@ -99,11 +99,11 @@ for which the expectation value is
 **Examples**
 ```
 $ dicetools -w -5
-For a save roll with bonus -5, the expected number of rolls is 3.33
+For a saving throw with bonus -5, the expected number of rolls is 3.33
 ```
 ```
 $ dicetools -w 3
-For a save roll with bonus +3, the expected number of rolls is 1.43
+For a saving throw with bonus +3, the expected number of rolls is 1.43
 ```
 
 ## Contributing
