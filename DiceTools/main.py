@@ -12,6 +12,8 @@ def _parse():
     parser.add_argument("-p", "--dice", type=str, nargs="+", help="Dice parser [kdn] <+ j>")
     parser.add_argument("-r", "--roll", type=str, nargs="+", help="Dice roller [k   dn] <+ j>")
     parser.add_argument("-w", "--wait", type=int, help="Expectation value #rolls for save roll with WAIT bonus/malus.")
+    parser.add_argument("-A", action="store_true", help="Advatage for the DD challenge")
+    parser.add_argument("-D", action="store_true", help="Disadvantage for the DD challenge")
 
     parser.add_argument("--debug", action="store_true", help="prints debug info")
 
@@ -34,25 +36,36 @@ def _printDebug(args):
     print("***********************************************************************")
 
 
-def computeStats(raw_rating, raw_bonus, *, display=True):
+def computeStats(raw_rating, raw_bonus, *, display=True, adv=False, disadv=False):
     """ succedes on equality"""
     rating, bonus = int(raw_rating), int(raw_bonus)
 
-    chance = 5 * bonus - (rating - 10) * 5 + 55
+    adv_str = ""
 
-    renormalized_chance = min(95, max(5, chance))
+    if adv:
+        chance = (-1 / 400 * (rating - bonus - 20 - 1) * (rating - bonus + 20) - (20 - rating + bonus + 1) / 400) * 100
+        renormalized_chance = min(100 - 1 / 4, max(1 / 4, chance))
+        adv_str = " \033[92m" + "with advantage" + "\033[0m"
+    elif disadv:
+        chance = (1 / 400 * (rating - bonus - 20 - 1) * (rating - bonus + 20) + 41 / 400 * (20 - rating + bonus + 1) / 400) * 100
+        renormalized_chance = min(100 - 1 / 4, max(1 / 4, chance))
+        adv_str = " \033[91m" + "with disadvantage" + "\033[0m"
+    else:
+        chance = 5 * bonus - (rating - 10) * 5 + 55
 
-    disp_bonus = str(bonus)
-    if bonus >= 0:
-        disp_bonus = "+" + disp_bonus
+        renormalized_chance = min(95, max(5, chance))
 
     if display:
+        disp_bonus = str(bonus)
+        if bonus >= 0:
+            disp_bonus = "+" + disp_bonus
+
         if renormalized_chance == 5:
-            print("\033[91m" f"{renormalized_chance} % (crit only)" + "\033[0m" + f" chances to succed against a rating of {rating} with a {disp_bonus} bonus.")
+            print("\033[91m" f"{renormalized_chance:.2f} % (crit only)" + "\033[0m" + f" chances to succed against a rating of {rating} with a {disp_bonus} bonus{adv_str}.")
         elif renormalized_chance < 50:
-            print("\033[93m" f"{renormalized_chance} %" + "\033[0m" + f" chances to succed against a rating of {rating} with a {disp_bonus} bonus.")
+            print("\033[93m" f"{renormalized_chance:.2f} %" + "\033[0m" + f" chances to succed against a rating of {rating} with a {disp_bonus} bonus{adv_str}.")
         else:
-            print("\033[92m" f"{renormalized_chance} %" + "\033[0m" + f" chances to succed against a rating of {rating} with a {disp_bonus} bonus.")
+            print("\033[92m" f"{renormalized_chance:.2f} %" + "\033[0m" + f" chances to succed against a rating of {rating} with a {disp_bonus} bonus{adv_str}.")
 
     return renormalized_chance
 
@@ -165,7 +178,7 @@ def main():
         _printDebug(args)
 
     if args.DD:
-        computeStats(*args.DD)
+        computeStats(*args.DD, adv=args.A, disadv=args.D)
 
     elif args.dice:
         computeDice(args.dice)

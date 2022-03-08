@@ -11,6 +11,8 @@ Set of tools for D&D dice actions !
 - [Installation](#installation)
 - [Usage](#usage)
   * [Compute the chance to succed a challenge](#compute-the-chance-to-succed-a-challenge)
+    + [Roll with an advantage](#roll-with-an-advantage)
+    + [Roll with a disadvantage](#roll-with-a-disadvantage)
   * [Compute the average of a complex roll](#compute-the-average-of-a-complex-roll)
   * [Roll a complex roll](#roll-a-complex-roll)
   * [Compute the expected number of rolls for a saving throw with bonus](#compute-the-expected-number-of-rolls-for-a-saving-throw-with-bonus)
@@ -49,6 +51,19 @@ $ dicetools -d 18 5
 $ dicetools -d 10 3
 70 % chances to succed against a rating of 10 with a +3 bonus.
 ```
+#### Roll with an advantage
+Use the `-A` option :
+```
+$ dicetools -d 18 4 -A
+57.75 % chances to succed against a rating of 18 with a +4 bonus with advantage.
+```
+#### Roll with a disadvantage
+Use the `-D` option :
+```
+$ dicetools -d 18 4 -D
+0.25 % chances to succed against a rating of 18 with a +4 bonus with disadvantage.
+```
+
 ### Compute the average of a complex roll
 ```
 $ dicetools -p [roll]
