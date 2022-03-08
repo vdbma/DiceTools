@@ -54,14 +54,14 @@ $ dicetools -d 10 3
 #### Roll with an advantage
 Use the `-A` option :
 ```
-$ dicetools -d 18 4 -A
-57.75 % chances to succed against a rating of 18 with a +4 bonus with advantage.
+$ dicetools -d 18 5 -A
+64.00 % chances to succed against a rating of 18 with a +5 bonus with advantage.
 ```
 #### Roll with a disadvantage
 Use the `-D` option :
 ```
-$ dicetools -d 18 4 -D
-0.25 % chances to succed against a rating of 18 with a +4 bonus with disadvantage.
+$ dicetools -d 18 5 -D
+0.25 % chances to succed against a rating of 18 with a +5 bonus with disadvantage.
 ```
 
 ### Compute the average of a complex roll
