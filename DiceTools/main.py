@@ -47,12 +47,11 @@ def computeStats(raw_rating, raw_bonus, *, display=True, adv=False, disadv=False
         renormalized_chance = min(100 - 1 / 4, max(1 / 4, chance))
         adv_str = " \033[92m" + "with advantage" + "\033[0m"
     elif disadv:
-        chance = (1 / 400 * (rating - bonus - 20 - 1) * (rating - bonus + 20) + 41 / 400 * (20 - rating + bonus + 1) / 400) * 100
+        chance = (1 / 400 * (rating - bonus - 20 - 1) * (rating - bonus + 20) + 41 / 400 * (20 - rating + bonus + 1)) * 100
         renormalized_chance = min(100 - 1 / 4, max(1 / 4, chance))
         adv_str = " \033[91m" + "with disadvantage" + "\033[0m"
     else:
         chance = 5 * bonus - (rating - 10) * 5 + 55
-
         renormalized_chance = min(95, max(5, chance))
 
     if display:

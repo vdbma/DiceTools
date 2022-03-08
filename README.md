@@ -61,7 +61,7 @@ $ dicetools -d 18 5 -A
 Use the `-D` option :
 ```
 $ dicetools -d 18 5 -D
-0.25 % chances to succed against a rating of 18 with a +5 bonus with disadvantage.
+16.00 % chances to succed against a rating of 18 with a +5 bonus with disadvantage.
 ```
 
 ### Compute the average of a complex roll
