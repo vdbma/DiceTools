@@ -12,6 +12,8 @@ def _parse():
     parser.add_argument("-p", "--dice", type=str, nargs="+", help="Dice parser [kdn] <+ j>")
     parser.add_argument("-r", "--roll", type=str, nargs="+", help="Dice roller [k   dn] <+ j>")
     parser.add_argument("-w", "--wait", type=int, help="Expectation value #rolls for save roll with WAIT bonus/malus.")
+    parser.add_argument("-A", action="store_true", help="Advatage for the DD challenge")
+    parser.add_argument("-D", action="store_true", help="Disadvantage for the DD challenge")
 
     parser.add_argument("--debug", action="store_true", help="prints debug info")
 
@@ -34,25 +36,35 @@ def _printDebug(args):
     print("***********************************************************************")
 
 
-def computeStats(raw_rating, raw_bonus, *, display=True):
+def computeStats(raw_rating, raw_bonus, *, display=True, adv=False, disadv=False):
     """ succedes on equality"""
     rating, bonus = int(raw_rating), int(raw_bonus)
 
-    chance = 5 * bonus - (rating - 10) * 5 + 55
+    adv_str = ""
+    chance = min(100, max(0, 5 * bonus - (rating - 10) * 5 + 55))
 
-    renormalized_chance = min(95, max(5, chance))
-
-    disp_bonus = str(bonus)
-    if bonus >= 0:
-        disp_bonus = "+" + disp_bonus
+    if adv:
+        chance = 2 * chance - chance * chance / 100
+        renormalized_chance = min(99.75, max(0.25, chance))
+        adv_str = " \033[92m" + "with advantage" + "\033[0m"
+    elif disadv:
+        chance = chance * chance / 100
+        renormalized_chance = min(99.75, max(0.25, chance))
+        adv_str = " \033[91m" + "with disadvantage" + "\033[0m"
+    else:
+        renormalized_chance = min(95, max(5, chance))
 
     if display:
+        disp_bonus = str(bonus)
+        if bonus >= 0:
+            disp_bonus = "+" + disp_bonus
+
         if renormalized_chance == 5:
-            print("\033[91m" f"{renormalized_chance} % (crit only)" + "\033[0m" + f" chances to succed against a rating of {rating} with a {disp_bonus} bonus.")
+            print("\033[91m" f"{renormalized_chance:.2f} % (crit only)" + "\033[0m" + f" chances to succed against a rating of {rating} with a {disp_bonus} bonus{adv_str}.")
         elif renormalized_chance < 50:
-            print("\033[93m" f"{renormalized_chance} %" + "\033[0m" + f" chances to succed against a rating of {rating} with a {disp_bonus} bonus.")
+            print("\033[93m" f"{renormalized_chance:.2f} %" + "\033[0m" + f" chances to succed against a rating of {rating} with a {disp_bonus} bonus{adv_str}.")
         else:
-            print("\033[92m" f"{renormalized_chance} %" + "\033[0m" + f" chances to succed against a rating of {rating} with a {disp_bonus} bonus.")
+            print("\033[92m" f"{renormalized_chance:.2f} %" + "\033[0m" + f" chances to succed against a rating of {rating} with a {disp_bonus} bonus{adv_str}.")
 
     return renormalized_chance
 
@@ -160,20 +172,25 @@ def computeExpectationWait(bonus):
 
 
 def main():
+    exit = False
     args = _parse()
     if args.debug:
         _printDebug(args)
 
-    if args.DD:
-        computeStats(*args.DD)
+    if args.A and args.D:
+        print("\033[91mERROR :  Can't have both advantage and disadvantage.\033[0m")
+        exit = True
 
-    elif args.dice:
+    if args.DD and not exit:
+        computeStats(*args.DD, adv=args.A, disadv=args.D)
+
+    elif args.dice and not exit:
         computeDice(args.dice)
 
-    if args.roll:
+    if args.roll and not exit:
         computeRoll(args.roll)
 
-    if args.wait is not None:
+    if args.wait is not None and not exit:
         computeExpectationWait(args.wait)
 
 
