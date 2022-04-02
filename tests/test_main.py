@@ -14,6 +14,20 @@ def test_computeStats():
     assert computeStats(9999, 0, display=False) == 5
     assert computeStats(10, -400, display=False) == 5
 
+    # advantage / disadvantage
+
+    assert computeStats(10, 0, display=False, adv=True) == 79.75
+    assert computeStats(8, -5, display=False, adv=True) == 64
+    assert computeStats(10, 7, display=False, adv=True) == 99
+    assert computeStats(10, 30, display=False, adv=True) == 99.75
+    assert computeStats(10, -50, display=False, adv=True) == 0.25
+
+    assert computeStats(10, 0, display=False, disadv=True) == 30.25
+    assert computeStats(8, -5, display=False, disadv=True) == 16
+    assert computeStats(10, 7, display=False, disadv=True) == 81
+    assert computeStats(10, 30, display=False, disadv=True) == 99.75
+    assert computeStats(10, -50, display=False, disadv=True) == 0.25
+
 
 def test_avgDice():
     assert avgDice("1d10") == 5.5
