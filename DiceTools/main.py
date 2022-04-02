@@ -172,20 +172,25 @@ def computeExpectationWait(bonus):
 
 
 def main():
+    exit = False
     args = _parse()
     if args.debug:
         _printDebug(args)
 
-    if args.DD:
+    if args.A and args.D:
+        print("\033[91mERROR :  Can't have both advantage and disadvantage.\033[0m")
+        exit = True
+
+    if args.DD and not exit:
         computeStats(*args.DD, adv=args.A, disadv=args.D)
 
-    elif args.dice:
+    elif args.dice and not exit:
         computeDice(args.dice)
 
-    if args.roll:
+    if args.roll and not exit:
         computeRoll(args.roll)
 
-    if args.wait is not None:
+    if args.wait is not None and not exit:
         computeExpectationWait(args.wait)
 
 
