@@ -6,14 +6,15 @@ import numpy.random as nr
 
 
 def _parse():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description="Use this programm to compute properties of dice rolls !")
 
-    parser.add_argument("-d", "--DD", type=str, nargs="+", help="DD challenge [rating] [bonus]")
-    parser.add_argument("-p", "--dice", type=str, nargs="+", help="Dice parser [kdn] <+ j>")
-    parser.add_argument("-r", "--roll", type=str, nargs="+", help="Dice roller [k   dn] <+ j>")
-    parser.add_argument("-w", "--wait", type=int, help="Expectation value #rolls for save roll with WAIT bonus/malus.")
+    parser.add_argument("-d", "--DD", type=str, nargs="+", help="DD challenge [rating] [bonus]: returns the probability to pass the challenge.")
     parser.add_argument("-A", action="store_true", help="Advatage for the DD challenge")
     parser.add_argument("-D", action="store_true", help="Disadvantage for the DD challenge")
+
+    parser.add_argument("-a", "--average", type=str, nargs="+", help="Compute average [kdn] <+ k'dn' + ...> <+ j>: Computes the average of a comlex roll ")
+    parser.add_argument("-r", "--roll", type=str, nargs="+", help="Dice roller [kdn] <+ k'dn' + ...> <+ j>")
+    parser.add_argument("-w", "--wait", type=int, help="Expectation value #rolls for save roll with WAIT [bonus/malus].")
 
     parser.add_argument("--debug", action="store_true", help="prints debug info")
 
@@ -184,8 +185,8 @@ def main():
     if args.DD and not exit:
         computeStats(*args.DD, adv=args.A, disadv=args.D)
 
-    elif args.dice and not exit:
-        computeDice(args.dice)
+    elif args.average and not exit:
+        computeDice(args.average)
 
     if args.roll and not exit:
         computeRoll(args.roll)

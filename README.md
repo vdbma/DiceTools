@@ -66,18 +66,18 @@ $ dicetools -d 18 5 -D
 
 ### Compute the average of a complex roll
 ```
-$ dicetools -p [roll]
+$ dicetools -a [roll]
 ```
 *Note* you need to use quotes if there is a `-` in your roll.
 
 **Examples**
 ```
-$ dicetools -p "1d5 -1d7 +6"
+$ dicetools -a "1d5 -1d7 +6"
 Roll : 1d5  - 1d7  + 6
 Average : 5.0
 ```
 ```
-$ dicetools -p 1d20 + 7
+$ dicetools -a 1d20 + 7
 Roll : 1d20  +  7
 Average : 17.5
 ```
