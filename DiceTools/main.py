@@ -12,9 +12,12 @@ def _parse():
     parser.add_argument("-A", action="store_true", help="Advatage for the DD challenge")
     parser.add_argument("-D", action="store_true", help="Disadvantage for the DD challenge")
 
-    parser.add_argument("-a", "--average", type=str, nargs="+", help="Compute average [kdn] <+ k'dn' + ...> <+ j>: Computes the average of a comlex roll ")
+    parser.add_argument("-a", "--average", type=str, nargs="+", help="Compute average [kdn] <+ k'dn' + ...> <+ j>: Computes the average of a complex roll ")
+    parser.add_argument("-s", "--statistics", type=str, nargs="+", help="Compute distribution [kdn] <+ k'dn' + ...> <+ j>: Computes the distribution of a comlex roll ")
     parser.add_argument("-r", "--roll", type=str, nargs="+", help="Dice roller [kdn] <+ k'dn' + ...> <+ j>")
     parser.add_argument("-w", "--wait", type=int, help="Expectation value #rolls for save roll with WAIT [bonus/malus].")
+
+    parser.add_argument("--mpl", action="store_true", help="Uses matplotlib to plot statistics")
 
     parser.add_argument("--debug", action="store_true", help="prints debug info")
 
@@ -102,6 +105,56 @@ def computeDice(raw_roll):
     print(f"Roll : {' '.join(summands)}\n" f"Average : {tot}")
     return tot
 
+def computeDistribution(raw_roll):
+    
+    summands = parseRoll(raw_roll)
+
+    dice_list = []
+    add = 0
+    sign = 1
+    min_val = 1
+
+    for elt in summands:
+        if isDie(elt):
+            n_dice, n_faces = elt.split("d")
+            n_dice = int(n_dice)
+            n_faces = int(n_faces)
+            dice_list += [sign * np.ones((n_faces))/n_faces]*n_dice
+            min_val += sign * n_dice            
+            sign = 1
+        elif isNumber(elt):
+            add += int(elt) * sign
+            min_val += add
+            sign = 1
+        elif elt == "-":
+            sign = -1
+    
+    dist = 1
+
+    for d in dice_list:
+        dist = np.convolve(dist,d)
+    
+    res = np.arange(len(dist)) + min_val -1
+
+    return res,dist
+
+def plotDistribution(res,dist,*, useMpl=False):
+    if useMpl:
+        import matplotlib.pyplot as plt
+        fig, ax = plt.subplots()
+        ax.plot(res,dist*100,".")
+        ax.set_xlabel("Result")
+        ax.set_ylabel("Probability (%)")
+        plt.show()
+    else:
+        b ="█"
+        width_norm = 250
+        left_width = 10
+        s = "Distribution :\n"
+        for r,p in zip(res,dist):
+            s += f"{r}:".ljust(5)+ f"{p*100:.1f} %".ljust(left_width," ")+int(p*width_norm)*b+'\n'
+        print(s)
+
 
 def isDie(s):
     """returns whether a string is a dice roll"""
@@ -187,6 +240,10 @@ def main():
 
     elif args.average and not exit:
         computeDice(args.average)
+
+    elif args.statistics and not exit:
+        computeDice(args.statistics)
+        plotDistribution(*computeDistribution(args.statistics),useMpl=args.mpl)
 
     if args.roll and not exit:
         computeRoll(args.roll)
