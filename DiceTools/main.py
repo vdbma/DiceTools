@@ -1,20 +1,59 @@
 import argparse
 import sys
+import os
 import re
 import numpy as np
 import numpy.random as nr
 
 
 def _parse():
-    parser = argparse.ArgumentParser(description="Use this programm to compute properties of dice rolls !")
+    parser = argparse.ArgumentParser(
+        description="Use this programm to compute properties of dice rolls !"
+    )
 
-    parser.add_argument("-d", "--DD", type=str, nargs="+", help="DD challenge [rating] [bonus]: returns the probability to pass the challenge.")
+    parser.add_argument(
+        "-d",
+        "--DD",
+        type=str,
+        nargs="+",
+        help="DD challenge [rating] [bonus]: returns the probability to pass the challenge.",
+    )
     parser.add_argument("-A", action="store_true", help="Advatage for the DD challenge")
-    parser.add_argument("-D", action="store_true", help="Disadvantage for the DD challenge")
+    parser.add_argument(
+        "-D", action="store_true", help="Disadvantage for the DD challenge"
+    )
 
-    parser.add_argument("-a", "--average", type=str, nargs="+", help="Compute average [kdn] <+ k'dn' + ...> <+ j>: Computes the average of a comlex roll ")
-    parser.add_argument("-r", "--roll", type=str, nargs="+", help="Dice roller [kdn] <+ k'dn' + ...> <+ j>")
-    parser.add_argument("-w", "--wait", type=int, help="Expectation value #rolls for save roll with WAIT [bonus/malus].")
+    parser.add_argument(
+        "-a",
+        "--average",
+        type=str,
+        nargs="+",
+        help="Compute average [kdn] <+ k'dn' + ...> <+ j>: Computes the average of a complex roll ",
+    )
+    parser.add_argument(
+        "-s",
+        "--statistics",
+        type=str,
+        nargs="+",
+        help="Compute distribution [kdn] <+ k'dn' + ...> <+ j>: Computes the distribution of a comlex roll ",
+    )
+    parser.add_argument(
+        "-r",
+        "--roll",
+        type=str,
+        nargs="+",
+        help="Dice roller [kdn] <+ k'dn' + ...> <+ j>",
+    )
+    parser.add_argument(
+        "-w",
+        "--wait",
+        type=int,
+        help="Expectation value #rolls for save roll with WAIT [bonus/malus].",
+    )
+
+    parser.add_argument(
+        "--mpl", action="store_true", help="Uses matplotlib to plot statistics"
+    )
 
     parser.add_argument("--debug", action="store_true", help="prints debug info")
 
@@ -23,22 +62,35 @@ def _parse():
 
 
 def _printDebug(args):
-
     # DEBUG:
     print("******************************** DEBUG ********************************")
     print("Argument \t \t Type \t \t \t  Value")
     print("***********************************************************************")
     for arg in vars(args):
         if len(arg) < 8:
-            print(arg, "\t \t \t", type(getattr(args, arg)), "\t \t", getattr(args, arg), sep="")
+            print(
+                arg,
+                "\t \t \t",
+                type(getattr(args, arg)),
+                "\t \t",
+                getattr(args, arg),
+                sep="",
+            )
         else:
-            print(arg, "\t \t", type(getattr(args, arg)), "\t \t", getattr(args, arg), sep="")
+            print(
+                arg,
+                "\t \t",
+                type(getattr(args, arg)),
+                "\t \t",
+                getattr(args, arg),
+                sep="",
+            )
     print("\nSystem exec : ", sys.executable)
     print("***********************************************************************")
 
 
 def computeStats(raw_rating, raw_bonus, *, display=True, adv=False, disadv=False):
-    """ succedes on equality"""
+    """succedes on equality"""
     rating, bonus = int(raw_rating), int(raw_bonus)
 
     adv_str = ""
@@ -61,17 +113,32 @@ def computeStats(raw_rating, raw_bonus, *, display=True, adv=False, disadv=False
             disp_bonus = "+" + disp_bonus
 
         if renormalized_chance == 5:
-            print("\033[91m" f"{renormalized_chance:.2f} % (crit only)" + "\033[0m" + f" chances to succed against a rating of {rating} with a {disp_bonus} bonus{adv_str}.")
+            print(
+                "\033[91m"
+                f"{renormalized_chance:.2f} % (crit only)"
+                + "\033[0m"
+                + f" chances to succed against a rating of {rating} with a {disp_bonus} bonus{adv_str}."
+            )
         elif renormalized_chance < 50:
-            print("\033[93m" f"{renormalized_chance:.2f} %" + "\033[0m" + f" chances to succed against a rating of {rating} with a {disp_bonus} bonus{adv_str}.")
+            print(
+                "\033[93m"
+                f"{renormalized_chance:.2f} %"
+                + "\033[0m"
+                + f" chances to succed against a rating of {rating} with a {disp_bonus} bonus{adv_str}."
+            )
         else:
-            print("\033[92m" f"{renormalized_chance:.2f} %" + "\033[0m" + f" chances to succed against a rating of {rating} with a {disp_bonus} bonus{adv_str}.")
+            print(
+                "\033[92m"
+                f"{renormalized_chance:.2f} %"
+                + "\033[0m"
+                + f" chances to succed against a rating of {rating} with a {disp_bonus} bonus{adv_str}."
+            )
 
     return renormalized_chance
 
 
 def parseRoll(raw_roll):
-    """ parses dice rolls"""
+    """parses dice rolls"""
     roll = ""
     for item in raw_roll:
         if "+" in item or "-" in item:
@@ -80,7 +147,9 @@ def parseRoll(raw_roll):
         else:
             roll += item.strip(" ")
 
-    summands = re.split("([+-])", roll)  # [] for a list of possible separators, () to keep them
+    summands = re.split(
+        "([+-])", roll
+    )  # [] for a list of possible separators, () to keep them
     return summands
 
 
@@ -101,6 +170,71 @@ def computeDice(raw_roll):
             sign = -1
     print(f"Roll : {' '.join(summands)}\n" f"Average : {tot}")
     return tot
+
+
+def computeDistribution(raw_roll):
+    summands = parseRoll(raw_roll)
+
+    dice_list = []
+    add = 0
+    sign = 1
+    min_val = 1
+
+    for elt in summands:
+        if isDie(elt):
+            n_dice, n_faces = elt.split("d")
+            n_dice = int(n_dice)
+            n_faces = int(n_faces)
+            dice_list += [np.ones((n_faces)) / n_faces] * n_dice
+            if sign < 0:
+                min_val += -n_dice * n_faces
+            else:
+                min_val += n_dice
+
+            sign = 1
+        elif isNumber(elt):
+            add += int(elt) * sign
+            min_val += add
+            sign = 1
+        elif elt == "-":
+            sign = -1
+
+    dist = 1
+
+    for d in dice_list:
+        dist = np.convolve(dist, d)
+
+    res = np.arange(len(dist)) + min_val - 1
+
+    return res, dist
+
+
+def plotDistribution(res, dist, *, useMpl=False):
+    if useMpl:
+        try:
+            import matplotlib.pyplot as plt
+        except ModuleNotFoundError:
+            print("Matplotlib not found, reverting to default.")
+            return plotDistribution(res, dist, useMpl=False)
+        fig, ax = plt.subplots()
+        ax.plot(res, dist * 100, ".")
+        ax.set_xlabel("Result")
+        ax.set_ylabel("Probability (%)")
+        plt.show()
+    else:
+        ncols, _ = os.get_terminal_size()
+        b = "█"
+        width_norm = int(0.66 * ncols / dist.max())  # all have the same size
+        left_width = 10
+        s = "Distribution :\n"
+        for r, p in zip(res, dist):
+            s += (
+                f"{r}:".ljust(5)
+                + f"{p*100:.1f} %".ljust(left_width, " ")
+                + int(p * width_norm) * b
+                + "\n"
+            )
+        print(s)
 
 
 def isDie(s):
@@ -163,11 +297,19 @@ def computeExpectationWait(bonus):
     exp = 1 / p
 
     if p == 0.95:  # always succeds on 20
-        print(f"For a saving throw with bonus {disp_bonus}, the expected number of rolls is \033[92m{exp:.2f}\033[0m.")
+        print(
+            f"For a saving throw with bonus {disp_bonus}, the expected number of rolls is \033[92m{exp:.2f}\033[0m."
+        )
     elif p == 0.05:  # always fails on 1
-        print(f"For a saving throw with bonus {disp_bonus}, the expected number of rolls is \033[91m" f"{exp:.2f}" "\033[0m.")
+        print(
+            f"For a saving throw with bonus {disp_bonus}, the expected number of rolls is \033[91m"
+            f"{exp:.2f}"
+            "\033[0m."
+        )
     else:
-        print(f"For a saving throw with bonus {disp_bonus}, the expected number of rolls is \033[93m{exp:.2f}\033[0m.")
+        print(
+            f"For a saving throw with bonus {disp_bonus}, the expected number of rolls is \033[93m{exp:.2f}\033[0m."
+        )
 
     return exp
 
@@ -187,6 +329,10 @@ def main():
 
     elif args.average and not exit:
         computeDice(args.average)
+
+    elif args.statistics and not exit:
+        computeDice(args.statistics)
+        plotDistribution(*computeDistribution(args.statistics), useMpl=args.mpl)
 
     if args.roll and not exit:
         computeRoll(args.roll)

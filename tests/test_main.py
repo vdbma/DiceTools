@@ -1,5 +1,14 @@
-from DiceTools.main import computeStats, avgDice, isDie, computeDice, rollDie, computeExpectationWait
+from DiceTools.main import (
+    computeStats,
+    avgDice,
+    isDie,
+    computeDice,
+    rollDie,
+    computeExpectationWait,
+    computeDistribution,
+)
 import numpy as np
+from numpy.testing import assert_array_equal, assert_array_almost_equal_nulp
 
 
 def test_computeStats():
@@ -71,3 +80,19 @@ def test_computeExpectationWait():
     assert np.isclose(computeExpectationWait(-1), 2)
     assert np.isclose(computeExpectationWait(5), 1.25)
     assert np.isclose(computeExpectationWait(21), 20 / 19)
+
+
+def test_computeDistribution():
+    res, dis = computeDistribution("1d6")
+    assert_array_equal(res, np.arange(6) + 1)
+    assert_array_equal(dis, np.ones((6)) / 6)
+
+    res, dis = computeDistribution("2d6")
+    assert_array_almost_equal_nulp(res, np.arange(2, 13))
+    assert_array_almost_equal_nulp(
+        dis, np.array([1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1]) / 36
+    )
+
+    res, dis = computeDistribution("2d4 + 3")
+    assert_array_almost_equal_nulp(res, np.arange(2, 9) + 3)
+    assert_array_almost_equal_nulp(dis, np.array([1, 2, 3, 4, 3, 2, 1]) / 16)
