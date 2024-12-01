@@ -1,5 +1,6 @@
 import argparse
 import sys
+import os
 import re
 import numpy as np
 import numpy.random as nr
@@ -210,16 +211,20 @@ def computeDistribution(raw_roll):
 
 def plotDistribution(res, dist, *, useMpl=False):
     if useMpl:
-        import matplotlib.pyplot as plt
-
+        try:
+            import matplotlib.pyplot as plt
+        except ModuleNotFoundError:
+            print("Matplotlib not found, reverting to default.")
+            return plotDistribution(res, dist, useMpl=False)
         fig, ax = plt.subplots()
         ax.plot(res, dist * 100, ".")
         ax.set_xlabel("Result")
         ax.set_ylabel("Probability (%)")
         plt.show()
     else:
+        ncols, _ = os.get_terminal_size()
         b = "█"
-        width_norm = 250
+        width_norm = int(0.66 * ncols / dist.max())  # all have the same size
         left_width = 10
         s = "Distribution :\n"
         for r, p in zip(res, dist):
