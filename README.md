@@ -14,6 +14,7 @@ Set of tools for D&D dice actions !
     + [Roll with an advantage](#roll-with-an-advantage)
     + [Roll with a disadvantage](#roll-with-a-disadvantage)
   * [Compute the average of a complex roll](#compute-the-average-of-a-complex-roll)
+  * [Compute the full distribution of a complex roll](#compute-the-full-distribution-of-a-complex-roll)
   * [Roll a complex roll](#roll-a-complex-roll)
   * [Compute the expected number of rolls for a saving throw with bonus](#compute-the-expected-number-of-rolls-for-a-saving-throw-with-bonus)
 - [Contributing](#contributing)
@@ -81,6 +82,34 @@ $ dicetools -a 1d20 + 7
 Roll : 1d20  +  7
 Average : 17.5
 ```
+
+### Compute the full distribution of a complex roll
+```
+$ dicetools -s [roll]
+```
+*Note* you need to use quotes if there is a `-` in your roll.
+
+You can use the `--mpl` option to have a matplotlib plot of the distribution instead of it being printed in the terminal.
+
+**Examples**
+```
+$ dicetools -s 2d6
+Roll : 2d6
+Average : 7.0
+Distribution :
+2:   2.8 %     ██████████
+3:   5.6 %     ████████████████████
+4:   8.3 %     ███████████████████████████████
+5:   11.1 %    █████████████████████████████████████████
+6:   13.9 %    ███████████████████████████████████████████████████
+7:   16.7 %    ██████████████████████████████████████████████████████████████
+8:   13.9 %    ███████████████████████████████████████████████████
+9:   11.1 %    █████████████████████████████████████████
+10:  8.3 %     ███████████████████████████████
+11:  5.6 %     ████████████████████
+12:  2.8 %     ██████████
+```
+
 
 ### Roll a complex roll
 ```
