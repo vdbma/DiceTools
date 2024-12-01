@@ -1,4 +1,11 @@
-from DiceTools.main import computeStats, avgDice, isDie, computeDice, rollDie, computeExpectationWait
+from DiceTools.main import (
+    computeStats,
+    avgDice,
+    isDie,
+    computeDice,
+    rollDie,
+    computeExpectationWait,
+)
 import numpy as np
 
 
