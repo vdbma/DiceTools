@@ -15,6 +15,7 @@ Set of tools for D&D dice actions !
     + [Roll with a disadvantage](#roll-with-a-disadvantage)
   * [Compute the average of a complex roll](#compute-the-average-of-a-complex-roll)
   * [Compute the full distribution of a complex roll](#compute-the-full-distribution-of-a-complex-roll)
+  * [Compare two distribution](#compare-two-distribution)
   * [Roll a complex roll](#roll-a-complex-roll)
   * [Compute the expected number of rolls for a saving throw with bonus](#compute-the-expected-number-of-rolls-for-a-saving-throw-with-bonus)
 - [Contributing](#contributing)
@@ -110,6 +111,15 @@ Distribution :
 12:  2.8 %     ██████████
 ```
 
+### Compare two distribution
+```
+$ dicetools -s [roll] -c [second roll]
+```
+*Note* you need to use quotes if there is a `-` in your roll.
+
+You can use the `--mpl` option to have a matplotlib plot of the distribution instead of it being printed in the terminal.
+
+The second roll distribution is printed in red.
 
 ### Roll a complex roll
 ```
