@@ -35,7 +35,14 @@ def _parse():
         "--statistics",
         type=str,
         nargs="+",
-        help="Compute distribution [kdn] <+ k'dn' + ...> <+ j>: Computes the distribution of a comlex roll ",
+        help="Compute distribution [kdn] <+ k'dn' + ...> <+ j>: Computes the distribution of a complex roll ",
+    )
+    parser.add_argument(
+        "-c",
+        "--comparison",
+        type=str,
+        nargs="+",
+        help="Compute distribution [kdn] <+ k'dn' + ...> <+ j>: Compares with the distribution of the -s/--statistics option",
     )
     parser.add_argument(
         "-r",
@@ -153,7 +160,7 @@ def parseRoll(raw_roll):
     return summands
 
 
-def computeDice(raw_roll):
+def computeDice(raw_roll, color=None):
     """computed the average of the roll"""
     tot = 0
     summands = parseRoll(raw_roll)
@@ -168,7 +175,10 @@ def computeDice(raw_roll):
             sign = 1
         if elt == "-":
             sign = -1
-    print(f"Roll : {' '.join(summands)}\n" f"Average : {tot}")
+    if color is None:
+        print(f"Roll : {' '.join(summands)}\n" f"Average : {tot}")
+    else:
+        print(f"{color}Roll : {' '.join(summands)}\n" f"Average : {tot}\33[0m")
     return tot
 
 
@@ -234,6 +244,68 @@ def plotDistribution(res, dist, *, useMpl=False):
                 + int(p * width_norm) * b
                 + "\n"
             )
+        print(s)
+
+
+def plotDistributionComparison(res1, dist1, res2, dist2, *, useMpl=False):
+    if useMpl:
+        try:
+            import matplotlib.pyplot as plt
+        except ModuleNotFoundError:
+            print("Matplotlib not found, reverting to default.")
+            return plotDistribution(res1, dist1, res2, dist2, useMpl=False)
+        fig, ax = plt.subplots()
+        ax.plot(res1, dist1 * 100, ".", label="1")
+        ax.plot(res2, dist2 * 100, ".", label="2")
+
+        ax.set_xlabel("Result")
+        ax.set_ylabel("Probability (%)")
+        ax.legend()
+        plt.show()
+    else:
+        all_res = list(set([*res1, *res2]))
+        all_dist1 = [0] * len(all_res)
+        all_dist2 = [0] * len(all_res)
+
+        for i, r in enumerate(all_res):
+            for j in range(len(res1)):
+                if res1[j] == r:
+                    all_dist1[i] = dist1[j]
+                    break
+            for j in range(len(res2)):
+                if res2[j] == r:
+                    all_dist2[i] = dist2[j]
+                    break
+        all_res = np.array(all_res)
+        all_dist1 = np.array(all_dist1)
+        all_dist2 = np.array(all_dist2)
+
+        ncols, _ = os.get_terminal_size()
+        b1 = "█"
+        b2 = "\33[31m█\33[0m"
+        width_norm = int(0.66 * ncols / max(all_dist1.max(), all_dist2.max()))
+        left_width = 10
+        s = "Distribution :\n"
+        for r, p1, p2 in zip(all_res, all_dist1, all_dist2):
+            s += (
+                f"{r}:".ljust(5)
+                + f"{p1*100:.1f} %".ljust(left_width, " ")
+                + "\33[31m"
+                + f"{p2*100:.1f} %".ljust(left_width, " ")
+                + "\33[0m"
+            )
+            if p1 < p2:
+                s += (
+                    int(p1 * width_norm) * b1
+                    + (int(p2 * width_norm) - int(p1 * width_norm)) * b2
+                    + "\n"
+                )
+            else:
+                s += (
+                    int(p2 * width_norm) * b2
+                    + (int(p1 * width_norm) - int(p2 * width_norm)) * b1
+                    + "\n"
+                )
         print(s)
 
 
@@ -331,8 +403,17 @@ def main():
         computeDice(args.average)
 
     elif args.statistics and not exit:
-        computeDice(args.statistics)
-        plotDistribution(*computeDistribution(args.statistics), useMpl=args.mpl)
+        if args.comparison:
+            computeDice(args.statistics)
+            computeDice(args.comparison, color="\33[31m")
+            plotDistributionComparison(
+                *computeDistribution(args.statistics),
+                *computeDistribution(args.comparison),
+                useMpl=args.mpl,
+            )
+        else:
+            computeDice(args.statistics)
+            plotDistribution(*computeDistribution(args.statistics), useMpl=args.mpl)
 
     if args.roll and not exit:
         computeRoll(args.roll)
