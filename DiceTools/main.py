@@ -1,7 +1,8 @@
 import argparse
-import sys
 import os
 import re
+import sys
+
 import numpy as np
 import numpy.random as nr
 
@@ -176,9 +177,9 @@ def computeDice(raw_roll, color=None):
         if elt == "-":
             sign = -1
     if color is None:
-        print(f"Roll : {' '.join(summands)}\n" f"Average : {tot}")
+        print(f"Roll : {' '.join(summands)}\nAverage : {tot}")
     else:
-        print(f"{color}Roll : {' '.join(summands)}\n" f"Average : {tot}\33[0m")
+        print(f"{color}Roll : {' '.join(summands)}\nAverage : {tot}\33[0m")
     return tot
 
 
@@ -195,7 +196,7 @@ def computeDistribution(raw_roll):
             n_dice, n_faces = elt.split("d")
             n_dice = int(n_dice)
             n_faces = int(n_faces)
-            dice_list += [np.ones((n_faces)) / n_faces] * n_dice
+            dice_list += [np.ones(n_faces) / n_faces] * n_dice
             if sign < 0:
                 min_val += -n_dice * n_faces
             else:
@@ -240,7 +241,7 @@ def plotDistribution(res, dist, *, useMpl=False):
         for r, p in zip(res, dist):
             s += (
                 f"{r}:".ljust(5)
-                + f"{p*100:.1f} %".ljust(left_width, " ")
+                + f"{p * 100:.1f} %".ljust(left_width, " ")
                 + int(p * width_norm) * b
                 + "\n"
             )
@@ -289,9 +290,9 @@ def plotDistributionComparison(res1, dist1, res2, dist2, *, useMpl=False):
         for r, p1, p2 in zip(all_res, all_dist1, all_dist2):
             s += (
                 f"{r}:".ljust(5)
-                + f"{p1*100:.1f} %".ljust(left_width, " ")
+                + f"{p1 * 100:.1f} %".ljust(left_width, " ")
                 + "\33[31m"
-                + f"{p2*100:.1f} %".ljust(left_width, " ")
+                + f"{p2 * 100:.1f} %".ljust(left_width, " ")
                 + "\33[0m"
             )
             if p1 < p2:
@@ -349,7 +350,7 @@ def computeRoll(raw_roll):
         if elt == "-":
             sign = -1
 
-    print(f"Roll : {' '.join(summands)}\n" f"Result : {tot} {tuple(results)}")
+    print(f"Roll : {' '.join(summands)}\nResult : {tot} {tuple(results)}")
 
     return tot
 
